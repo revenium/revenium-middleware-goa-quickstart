@@ -1,0 +1,86 @@
+{
+  "tools": [
+    {
+      "id": "ask_travel.ask",
+      "service": "travel",
+      "toolset": "ask_travel",
+      "title": "Ask",
+      "description": "Ask travel planning specialist",
+      "payload": {
+        "name": "AskPayload",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "Question",
+              "example": "Odit quibusdam consequatur qui similique tenetur."
+            }
+          },
+          "required": [
+            "question"
+          ]
+        }
+      },
+      "result": {
+        "name": "AskResult",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "description": "Answer",
+              "example": "Adipisci quaerat eum repellendus."
+            }
+          },
+          "required": [
+            "answer"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ask_weather.ask",
+      "service": "weather",
+      "toolset": "ask_weather",
+      "title": "Ask",
+      "description": "Ask weather specialist",
+      "payload": {
+        "name": "AskPayload",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "Question",
+              "example": "Molestiae expedita ut ut et."
+            }
+          },
+          "required": [
+            "question"
+          ]
+        }
+      },
+      "result": {
+        "name": "AskResult",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "description": "Answer",
+              "example": "Dolores ducimus sed eaque consectetur harum enim."
+            }
+          },
+          "required": [
+            "answer"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "tools": [
+    {
+      "id": "ask_flights.ask",
+      "service": "flights",
+      "toolset": "ask_flights",
+      "title": "Ask",
+      "description": "Ask flight search specialist",
+      "payload": {
+        "name": "AskPayload",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "Question",
+              "example": "Officia adipisci voluptatem ab."
+            }
+          },
+          "required": [
+            "question"
+          ]
+        }
+      },
+      "result": {
+        "name": "AskResult",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "description": "Answer",
+              "example": "Aperiam ad."
+            }
+          },
+          "required": [
+            "answer"
+          ]
+        }
+      }
+    },
+    {
+      "id": "flight_tools.search_flights",
+      "service": "flights",
+      "toolset": "flights.flight_tools",
+      "title": "Search Flights",
+      "description": "Search for flights",
+      "payload": {
+        "name": "SearchFlightsPayload",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "description": "Travel date",
+              "example": "Debitis suscipit dolor."
+            },
+            "destination": {
+              "type": "string",
+              "description": "Destination city",
+              "example": "Qui qui similique officiis accusamus illum ea."
+            },
+            "origin": {
+              "type": "string",
+              "description": "Origin city",
+              "example": "Autem assumenda incidunt fuga."
+            }
+          },
+          "required": [
+            "origin",
+            "destination",
+            "date"
+          ]
+        }
+      },
+      "result": {
+        "name": "SearchFlightsResult",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "results": {
+              "type": "string",
+              "description": "Flight search results",
+              "example": "Sint et quia id ut officia quisquam."
+            }
+          },
+          "required": [
+            "results"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,216 @@
+{
+  "tools": [
+    {
+      "id": "ask_flights.ask",
+      "service": "flights",
+      "toolset": "ask_flights",
+      "title": "Ask",
+      "description": "Ask flight search specialist",
+      "payload": {
+        "name": "AskPayload",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "Question",
+              "example": "Adipisci omnis nesciunt non veniam voluptate."
+            }
+          },
+          "required": [
+            "question"
+          ]
+        }
+      },
+      "result": {
+        "name": "AskResult",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "description": "Answer",
+              "example": "Aut commodi in."
+            }
+          },
+          "required": [
+            "answer"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ask_hotels.ask",
+      "service": "hotels",
+      "toolset": "ask_hotels",
+      "title": "Ask",
+      "description": "Ask hotel search specialist",
+      "payload": {
+        "name": "AskPayload",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "Question",
+              "example": "Cupiditate adipisci debitis neque molestiae ea officia."
+            }
+          },
+          "required": [
+            "question"
+          ]
+        }
+      },
+      "result": {
+        "name": "AskResult",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "description": "Answer",
+              "example": "Enim quia eos dolorem."
+            }
+          },
+          "required": [
+            "answer"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ask_travel.ask",
+      "service": "travel",
+      "toolset": "ask_travel",
+      "title": "Ask",
+      "description": "Ask travel planning specialist",
+      "payload": {
+        "name": "AskPayload",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "Question",
+              "example": "Omnis sit et qui dicta."
+            }
+          },
+          "required": [
+            "question"
+          ]
+        }
+      },
+      "result": {
+        "name": "AskResult",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "description": "Answer",
+              "example": "Amet maxime."
+            }
+          },
+          "required": [
+            "answer"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ask_weather.ask",
+      "service": "weather",
+      "toolset": "ask_weather",
+      "title": "Ask",
+      "description": "Ask weather specialist",
+      "payload": {
+        "name": "AskPayload",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "Question",
+              "example": "Laboriosam ut aperiam velit perspiciatis labore."
+            }
+          },
+          "required": [
+            "question"
+          ]
+        }
+      },
+      "result": {
+        "name": "AskResult",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "description": "Answer",
+              "example": "Aperiam dolor esse."
+            }
+          },
+          "required": [
+            "answer"
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget_tools.estimate_budget",
+      "service": "travel",
+      "toolset": "travel.budget_tools",
+      "title": "Estimate Budget",
+      "description": "Estimate travel budget",
+      "payload": {
+        "name": "EstimateBudgetPayload",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "days": {
+              "type": "integer",
+              "description": "Number of days",
+              "example": 5359242145643823522,
+              "format": "int64"
+            },
+            "destination": {
+              "type": "string",
+              "description": "Destination city",
+              "example": "Consequuntur consequatur."
+            }
+          },
+          "required": [
+            "destination",
+            "days"
+          ]
+        }
+      },
+      "result": {
+        "name": "EstimateBudgetResult",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "estimate": {
+              "type": "string",
+              "description": "Budget estimate",
+              "example": "Quis sequi culpa quis."
+            }
+          },
+          "required": [
+            "estimate"
+          ]
+        }
+      }
+    }
+  ]
+}

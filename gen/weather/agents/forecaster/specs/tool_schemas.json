@@ -1,0 +1,86 @@
+{
+  "tools": [
+    {
+      "id": "ask_weather.ask",
+      "service": "weather",
+      "toolset": "ask_weather",
+      "title": "Ask",
+      "description": "Ask weather specialist",
+      "payload": {
+        "name": "AskPayload",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "Question",
+              "example": "Voluptatem aut."
+            }
+          },
+          "required": [
+            "question"
+          ]
+        }
+      },
+      "result": {
+        "name": "AskResult",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "description": "Answer",
+              "example": "Ea aliquam minus iste autem."
+            }
+          },
+          "required": [
+            "answer"
+          ]
+        }
+      }
+    },
+    {
+      "id": "weather_tools.get_forecast",
+      "service": "weather",
+      "toolset": "weather.weather_tools",
+      "title": "Get Forecast",
+      "description": "Get forecast",
+      "payload": {
+        "name": "GetForecastPayload",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "city": {
+              "type": "string",
+              "description": "City",
+              "example": "Perferendis id dolorem velit suscipit."
+            }
+          },
+          "required": [
+            "city"
+          ]
+        }
+      },
+      "result": {
+        "name": "GetForecastResult",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "forecast": {
+              "type": "string",
+              "description": "Forecast",
+              "example": "Natus optio dolorum in sit."
+            }
+          },
+          "required": [
+            "forecast"
+          ]
+        }
+      }
+    }
+  ]
+}

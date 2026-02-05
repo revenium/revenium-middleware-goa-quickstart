@@ -1,0 +1,98 @@
+{
+  "tools": [
+    {
+      "id": "ask_hotels.ask",
+      "service": "hotels",
+      "toolset": "ask_hotels",
+      "title": "Ask",
+      "description": "Ask hotel search specialist",
+      "payload": {
+        "name": "AskPayload",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "Question",
+              "example": "Error praesentium quia et nulla est."
+            }
+          },
+          "required": [
+            "question"
+          ]
+        }
+      },
+      "result": {
+        "name": "AskResult",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "description": "Answer",
+              "example": "Magnam amet."
+            }
+          },
+          "required": [
+            "answer"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hotel_tools.search_hotels",
+      "service": "hotels",
+      "toolset": "hotels.hotel_tools",
+      "title": "Search Hotels",
+      "description": "Search for hotels",
+      "payload": {
+        "name": "SearchHotelsPayload",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "checkin": {
+              "type": "string",
+              "description": "Check-in date",
+              "example": "Ut officia."
+            },
+            "checkout": {
+              "type": "string",
+              "description": "Check-out date",
+              "example": "Similique dolorem laboriosam debitis."
+            },
+            "city": {
+              "type": "string",
+              "description": "City",
+              "example": "Ipsa quas nostrum aut aut at."
+            }
+          },
+          "required": [
+            "city",
+            "checkin",
+            "checkout"
+          ]
+        }
+      },
+      "result": {
+        "name": "SearchHotelsResult",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "results": {
+              "type": "string",
+              "description": "Hotel search results",
+              "example": "Qui sit officiis."
+            }
+          },
+          "required": [
+            "results"
+          ]
+        }
+      }
+    }
+  ]
+}
