@@ -1,6 +1,6 @@
 # Goa-AI Multi-Agent Quickstart with Revenium Metering
 
-A demonstration project showing how to build a multi-agent AI system using the [Goa-AI](https://goa.design) framework with [Revenium](https://revenium.io) metering integration for usage tracking and monetization.
+A demonstration project showing how to build a multi-agent AI system using the [Goa-AI](https://goa.design) framework with [Revenium](https://revenium.ai) metering integration for usage tracking and monetization.
 
 ## Overview
 
