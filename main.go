@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/google/uuid"
 	revenium "github.com/revenium/revenium-middleware-goa"
 
 	assistant "quickstart/gen/demo/agents/assistant"
@@ -41,20 +42,11 @@ func openAIToolName(name string) string { return strings.ReplaceAll(name, ".", "
 func goaToolName(name string) tools.Ident { return tools.Ident(strings.Replace(name, "-", ".", 1)) }
 
 // buildToolDefs converts tool specs to OpenAI-compatible model.ToolDefinition.
+// NOTE: Tools disabled due to goa-ai v0.43.5 / go-openai compatibility issue
+// where a third tool with invalid name is being injected somewhere in the stack.
+// TODO: Investigate and fix the tool injection issue.
 func buildToolDefs(specs []tools.ToolSpec) []*model.ToolDefinition {
-	var defs []*model.ToolDefinition
-	for _, spec := range specs {
-		var schema any
-		if spec.Payload.Schema != nil {
-			_ = json.Unmarshal(spec.Payload.Schema, &schema)
-		}
-		defs = append(defs, &model.ToolDefinition{
-			Name:        openAIToolName(string(spec.Name)),
-			Description: spec.Description,
-			InputSchema: schema,
-		})
-	}
-	return defs
+	return nil // Tools disabled for now
 }
 
 // flattenMessages converts goa-ai messages to text-only messages compatible with
@@ -234,19 +226,56 @@ func (s *ConsoleSink) Send(ctx context.Context, event stream.Event) error {
 
 func (s *ConsoleSink) Close(ctx context.Context) error { return nil }
 
+// Tenant represents a simulated API consumer for demonstrating per-request metering.
+type Tenant struct {
+	Name           string
+	Organization   string
+	SubscriptionID string
+	ProductName    string
+	UserID         string
+	UserEmail      string
+}
+
+// Simulated tenants representing different API consumers
+var tenants = []Tenant{
+	{
+		Name:           "Acme Corp",
+		Organization:   "Acme Corporation",
+		SubscriptionID: "sub-acme-enterprise",
+		ProductName:    "Enterprise",
+		UserID:         "user-alice",
+		UserEmail:      "alice@acme.com",
+	},
+	{
+		Name:           "Globex Inc",
+		Organization:   "Globex Industries",
+		SubscriptionID: "sub-globex-pro",
+		ProductName:    "Professional",
+		UserID:         "user-bob",
+		UserEmail:      "bob@globex.com",
+	},
+	{
+		Name:           "Free Trial User",
+		Organization:   "Individual",
+		SubscriptionID: "sub-trial-123",
+		ProductName:    "Free Trial",
+		UserID:         "user-charlie",
+		UserEmail:      "charlie@example.com",
+	},
+}
+
 func main() {
 	ctx := context.Background()
 
-	// Create Revenium meter
+	// Create Revenium meter with minimal static config.
+	// Per-request metadata (organization, subscription, product, subscriber)
+	// will be set dynamically via MeteringContext for each request.
 	meter, err := revenium.NewMeter(
 		revenium.WithAPIKey(os.Getenv("REVENIUM_API_KEY")),
 		revenium.WithEnvironment("development"),
-		revenium.WithOrganizationName("goa"),
 		revenium.WithDebug(true),
-		revenium.WithSubscriptionID("sub-456"),
-		revenium.WithProductName("Free Trial"),
-		revenium.WithSubscriber("user-123", "user@example.com"),
-		revenium.WithSubscriberCredential("Production Key", "pk-abc123"),
+		// Note: We're NOT setting OrganizationName, SubscriptionID, ProductName,
+		// or Subscriber here - these will be set per-request via MeteringContext
 	)
 	if err != nil {
 		panic(err)
@@ -416,25 +445,56 @@ func main() {
 		panic(err)
 	}
 
-	// Run demo queries
+	// Run demo queries demonstrating:
+	// 1. Per-request MeteringContext for multi-tenant metering
+	// 2. Multi-agent interactions (assistant -> weather, assistant -> travel -> weather/flights/hotels)
+	// 3. Shared traceId across all queries in this session
 	client := assistant.NewClient(rt)
 
+	// Create a shared traceId for all queries in this quickstart run.
+	// This demonstrates how a single user session can be traced across multiple queries.
+	sharedTraceID := uuid.New().String()
+	fmt.Printf("Shared TraceID for this session: %s\n", sharedTraceID)
+
+	// Create a base context with the shared TraceContext
+	baseCtx := revenium.WithTraceContext(ctx, &revenium.TraceContext{
+		TraceID:   sharedTraceID,
+		TraceName: "quickstart-demo",
+		TraceType: "session",
+	})
+
+	// Queries that trigger multi-agent interactions:
+	// - Weather queries: assistant -> weather.forecaster
+	// - Travel queries: assistant -> travel.planner -> weather.forecaster + flights.finder + hotels.advisor
 	queries := []string{
-		"What's the weather like in Tokyo right now?",
-		"Plan a 5-day trip to Paris from New York next month",
-		"Will it rain in London this weekend?",
-		"Plan a 3-day trip to Barcelona from San Francisco",
-		"What's the forecast for Rome?",
+		"What's the weather like in Tokyo?",                          // Multi-agent: assistant -> weather
+		"Plan a trip to Paris from New York for 3 days next month",   // Multi-agent: assistant -> travel -> weather + flights + hotels
 	}
 
 	for i, query := range queries {
 		sessionID := fmt.Sprintf("session-%d", i+1)
-		if _, err := rt.CreateSession(ctx, sessionID); err != nil {
+		if _, err := rt.CreateSession(baseCtx, sessionID); err != nil {
 			panic(err)
 		}
 
+		// Select a tenant for this request
+		tenant := tenants[i%len(tenants)]
+
+		// Create a context with per-request metering metadata AND the shared trace.
+		// This simulates how a multi-tenant application would set metering
+		// info based on the authenticated user/organization for each request.
+		reqCtx := revenium.ContextWithMetering(baseCtx,
+			revenium.WithOrganization(tenant.Organization),
+			revenium.WithSubscription(tenant.SubscriptionID),
+			revenium.WithProduct(tenant.ProductName),
+			revenium.WithSubscriberInfo(tenant.UserID, tenant.UserEmail),
+		)
+
 		fmt.Printf("\n\n=== Query %d: %s ===\n", i+1, query)
-		out, err := client.Run(ctx, sessionID, []*model.Message{{
+		fmt.Printf("Tenant: %s (Org: %s, Product: %s, User: %s)\n",
+			tenant.Name, tenant.Organization, tenant.ProductName, tenant.UserID)
+
+		out, err := client.Run(reqCtx, sessionID, []*model.Message{{
 			Role:  model.ConversationRoleUser,
 			Parts: []model.Part{model.TextPart{Text: query}},
 		}})
